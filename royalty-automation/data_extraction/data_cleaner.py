@@ -64,3 +64,20 @@ if extracted_text:
 else:
     print("No text to clean.")
 
+import pickle
+
+def save_cleaned_text_as_pickle(cleaned_text, filename='cleaned_data.pkl'):
+    # Save the cleaned text using pickle
+    with open(filename, 'wb') as pickle_file:
+        pickle.dump(cleaned_text, pickle_file)
+    print(f"Cleaned text saved as {filename}")
+
+# Call the function to save the cleaned data
+if cleaned_text:
+    save_cleaned_text_as_pickle(cleaned_text)
+else:
+    print("No cleaned text to save.")
+
+
+
+
