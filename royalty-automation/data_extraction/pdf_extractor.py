@@ -1,9 +1,13 @@
 import os
 import json
-from langchain.document_loaders import PyPDFLoader
+from langchain_community.document_loaders import PyPDFLoader
 
 # Function to extract raw text from a PDF
 def extract_pdf_content(pdf_path: str):
+    # Ensure the file exists before proceeding
+    if not os.path.exists(pdf_path):
+        raise ValueError(f"File path {pdf_path} does not exist. Please check the path.")
+    
     loader = PyPDFLoader(pdf_path)
     documents = loader.load()  # Extracts document data
     raw_text = " ".join([doc.page_content for doc in documents])  # Combines all the pages' content
@@ -31,6 +35,14 @@ def extract_and_save_pdf():
     else:
         # If no PDFs found, prompt user for input
         pdf_path = input("No PDF found in the CWD. Please drag and drop a PDF file, or provide the full path: ").strip()
+        
+        # Sanitize the path (strip extra spaces and handle quotes)
+        pdf_path = pdf_path.strip().strip('"').strip("'")
+
+    # Validate that the file path exists before proceeding
+    if not os.path.isfile(pdf_path):
+        print(f"Error: File '{pdf_path}' does not exist or is not a valid file.")
+        return
 
     # Extract content from the selected or provided PDF path
     extracted_text = extract_pdf_content(pdf_path)
@@ -41,4 +53,8 @@ def extract_and_save_pdf():
     save_to_json(data, output_file)
 
     print(f"Extracted data has been saved to {output_file}")
+
+# Example usage
+if __name__ == "__main__":
+    extract_and_save_pdf()
 
