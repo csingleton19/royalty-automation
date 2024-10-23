@@ -1,6 +1,38 @@
 import re
+import json
+import os
 
+def load_json_file(filename):
+    """Load a JSON file from the current directory or prompt for a new file."""
+    if os.path.isfile(filename):
+        with open(filename, 'r') as file:
+            data = json.load(file)
+            return data
+    else:
+        # Ask the user to provide a filepath
+        print(f"{filename} not found. Please provide the path to the JSON file.")
+        filepath = input("You can drag and drop the file here or enter the file path: ")
 
+        # Check if the provided path exists
+        if os.path.isfile(filepath):
+            with open(filepath, 'r') as file:
+                data = json.load(file)
+                return data
+        else:
+            print("The provided file path is invalid. Please check and try again.")
+            return None
+
+# Replace 'extracted_data.json' with your desired JSON filename
+filename = 'extracted_data.json'
+json_data = load_json_file(filename)
+
+if json_data is not None:
+    print("JSON data loaded successfully.")
+    # Extract the actual text from the JSON data
+    extracted_text = json_data.get('pdf_text', '')
+else:
+    print("Failed to load JSON data.")
+    extracted_text = ''
 
 def clean_extracted_text(text):
     # Fix split words like "T aylor" -> "Taylor"
@@ -21,13 +53,20 @@ def clean_extracted_text(text):
 
     # Remove any trailing spaces at the end of lines
     text = re.sub(r'[ \t]+$', '', text, flags=re.M)
-
+    
     return text
 
+# Clean the extracted text
+if extracted_text:
+    cleaned_text = clean_extracted_text(extracted_text)
+    print("Cleaned Text:")
+    print(cleaned_text)
+else:
+    print("No text to clean.")
 
 
 
-# def clean_extracted_text(text):
+# def clean_extracted_text(json_data):
 #     # Step 1: Reorder titles and data, ensure title comes before data
 #     lines = text.split('\n')
 #     clean_lines = []
@@ -57,7 +96,7 @@ def clean_extracted_text(text):
 #     # Step 4: Ensure tables stay readable by fixing tabular data spacing
 #     # Example: If there are more than one space separating items in a line, replace with a single space
 #     table_cleaned = re.sub(r' {2,}', ' ', fixed_text)
-    
+#     print(table_cleaned)
 #     return table_cleaned
 
 # # Example of how you'd call this function
