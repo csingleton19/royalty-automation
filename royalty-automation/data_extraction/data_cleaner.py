@@ -1,17 +1,28 @@
+import os
 import re
 import json
-import os
+import pickle
+
+# Centralized storage path for pickle files
+PICKLE_STORAGE_PATH = "storage/pickles/"
+JSON_STORAGE_PATH = "storage/json_data/"
+
+# Ensure storage directories exist
+os.makedirs(PICKLE_STORAGE_PATH, exist_ok=True)
+os.makedirs(JSON_STORAGE_PATH, exist_ok=True)
 
 def load_json_file(filename):
-    """Load a JSON file from the current directory or prompt for a new file."""
-    if os.path.isfile(filename):
-        with open(filename, 'r') as file:
+    """Load a JSON file from the centralized JSON storage or prompt for a new file."""
+    filepath = os.path.join(JSON_STORAGE_PATH, filename)
+    
+    if os.path.isfile(filepath):
+        with open(filepath, 'r') as file:
             data = json.load(file)
             return data
     else:
         # Ask the user to provide a filepath
-        print(f"{filename} not found. Please provide the path to the JSON file.")
-        filepath = input("You can drag and drop the file here or enter the file path: ")
+        print(f"{filename} not found in {JSON_STORAGE_PATH}. Please provide the path to the JSON file.")
+        filepath = input("You can drag and drop the file here or enter the file path: ").strip()
 
         # Check if the provided path exists
         if os.path.isfile(filepath):
@@ -64,19 +75,21 @@ if extracted_text:
 else:
     print("No text to clean.")
 
-import pickle
-
 def save_cleaned_text_as_pickle(cleaned_text, filename='cleaned_data.pkl'):
+    # Construct path for the pickle file in the centralized storage location
+    pickle_path = os.path.join(PICKLE_STORAGE_PATH, filename)
+    
     # Save the cleaned text using pickle
-    with open(filename, 'wb') as pickle_file:
+    with open(pickle_path, 'wb') as pickle_file:
         pickle.dump(cleaned_text, pickle_file)
-    print(f"Cleaned text saved as {filename}")
+    print(f"Cleaned text saved as {pickle_path}")
 
 # Call the function to save the cleaned data
 if cleaned_text:
     save_cleaned_text_as_pickle(cleaned_text)
 else:
     print("No cleaned text to save.")
+
 
 
 
