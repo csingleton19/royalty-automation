@@ -1,5 +1,7 @@
 import os
 import pickle
+import json
+import pandas as pd
 from openai import OpenAI
 from config.config import BASE_DIR
 from dotenv import load_dotenv
@@ -29,23 +31,36 @@ def load_cleaned_data():
 
 def extract_structured_data_with_llm(data):
     """
-    Uses OpenAI's API to extract structured data and format it as a dictionary.
+    Uses OpenAI's API to extract structured data, format it as a dictionary,
+    and then parse it into a nested Python dictionary.
     """
-    prompt = f"""You are a royalty automation extraction tool. Ignore the unstructured data 
-    Extract and format the structured data as a dictionary from the following: 
+    prompt = f"""You are a royalty automation extraction tool. Ignore any unstructured data 
+    and extract and format only the structured data as a nested dictionary from the following: 
     {data}
-"""
+    Ensure the output is in a valid JSON format, only include the nested dictionary. 
+    """
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",  
         messages=[
             {"role": "user", "content": prompt}
-        ]
+        ],
+        response_format={ "type": "json_object" }
     )
     
-    structured_data = response.choices[0].message
+    # Extract the response content (string format) from the LLM
+    structured_data_str = response.choices[0].message.content
+
+    # return structured_data_str
     
-    return structured_data  
+    try:
+        # Parse the string into a nested dictionary using json.loads
+        structured_data_dict = json.loads(structured_data_str)
+    except json.JSONDecodeError:
+        raise ValueError("The LLM response is not in a valid JSON format.")
+    
+    return structured_data_dict
+
 
 def extract_unstructured_data_with_llm(data):
     """
@@ -60,10 +75,22 @@ def extract_unstructured_data_with_llm(data):
         ]
     )
     
-    unstructured_data = response.choices[0].message
+    unstructured_data = response.choices[0].message.content
     
     return unstructured_data
 
+def create_quarterly_dataframes(structured_data):
+    quarterly_dfs = {}
+    for quarter, details in structured_data.items():
+        # Create DataFrame for the total summary
+        total_df = pd.DataFrame([details["Total"]])
+        
+        # Create DataFrame for the individual authors
+        authors_df = pd.DataFrame(details["Authors"])
+        
+        # Store both in a dictionary for easy access
+        quarterly_dfs[quarter] = {"total": total_df, "authors": authors_df}
+    return quarterly_dfs
 
 if __name__ == "__main__":
     data = load_cleaned_data()
@@ -78,6 +105,16 @@ if __name__ == "__main__":
         
         print("\nUnstructured Data:")
         print(unstructured_data)
+
+         # Ensure structured_data is a dictionary before proceeding
+        if isinstance(structured_data, dict) and structured_data:
+            quarterly_dfs = create_quarterly_dataframes(structured_data)
+            for quarter, dfs in quarterly_dfs.items():
+                print(f"\n{quarter} - Total Summary:")
+                print(dfs["total"])
+                print(f"\n{quarter} - Authors:")
+                print(dfs["authors"])
+        else:
+            print("Structured data is not in dictionary format. Please check the extraction.")
     else:
         print("Failed to load cleaned data.")
-
