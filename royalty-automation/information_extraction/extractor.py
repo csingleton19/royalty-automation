@@ -83,7 +83,7 @@ def create_quarterly_dataframes(structured_data):
     quarterly_dfs = {}
     for quarter, details in structured_data.items():
         # Create DataFrame for the total summary
-        total_df = pd.DataFrame([details["Total"]])
+        # total_df = pd.DataFrame([details["total"]])
         
         # Create DataFrame for the individual authors
         authors_df = pd.DataFrame(details["Authors"])
@@ -92,6 +92,51 @@ def create_quarterly_dataframes(structured_data):
         quarterly_dfs[quarter] = {"total": total_df, "authors": authors_df}
     return quarterly_dfs
 
+def extract_and_save_authors_data(structured_data):
+    # Process the authors' data across all quarters and save to CSV
+    all_authors_dfs = []
+    
+    for quarter, details in structured_data.items():
+        # Extract the authors' data from the current quarter
+        authors_df = pd.DataFrame(details["Authors"])
+        authors_df["Quarter"] = quarter  # Add a Quarter column for tracking
+        all_authors_dfs.append(authors_df)
+    
+    # Concatenate all author data across quarters
+    combined_df = pd.concat(all_authors_dfs, ignore_index=True)
+    
+    # Define the directory and filename for the CSV
+    csv_dir = os.path.join(BASE_DIR, 'storage/csv')
+    os.makedirs(csv_dir, exist_ok=True)
+    csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
+    
+    # Save the DataFrame to a CSV file
+    combined_df.to_csv(csv_file_path, index=False)
+    print(f"Combined authors' data saved to {csv_file_path}")
+
+
+def save_data_as_json(data, file_name, base_dir='storage/json_data'):
+    """
+    Saves unstructured or semi-structured data to a JSON file.
+    
+    Args:
+        data (dict or list): The data to save, ideally in dictionary or list format.
+        file_name (str): The desired name of the JSON file, without extension.
+        base_dir (str): The directory path to save the JSON file.
+    """
+    # Construct the path and ensure directory exists
+    json_file_path = os.path.join(base_dir, f'{file_name}.json')
+    os.makedirs(os.path.dirname(json_file_path), exist_ok=True)
+    
+    # Save the data as JSON
+    with open(json_file_path, 'w') as json_file:
+        json.dump(data, json_file, indent=4)
+    print(f"Data saved to {json_file_path}")
+
+# Example usage:
+# save_data_as_json(unstructured_data, 'output_data')
+
+
 if __name__ == "__main__":
     data = load_cleaned_data()
     if data is not None:
@@ -99,22 +144,17 @@ if __name__ == "__main__":
         
         structured_data = extract_structured_data_with_llm(data)
         unstructured_data = extract_unstructured_data_with_llm(data)
-        
         print("Structured Data (Dictionary):")
         print(structured_data)
-        
-        print("\nUnstructured Data:")
+        print("Unstructured Data:")
         print(unstructured_data)
 
-         # Ensure structured_data is a dictionary before proceeding
+        # Save the combined authors' data to CSV
         if isinstance(structured_data, dict) and structured_data:
-            quarterly_dfs = create_quarterly_dataframes(structured_data)
-            for quarter, dfs in quarterly_dfs.items():
-                print(f"\n{quarter} - Total Summary:")
-                print(dfs["total"])
-                print(f"\n{quarter} - Authors:")
-                print(dfs["authors"])
+            extract_and_save_authors_data(structured_data)
         else:
             print("Structured data is not in dictionary format. Please check the extraction.")
+        
+        save_data_as_json(unstructured_data, 'output_data')
     else:
         print("Failed to load cleaned data.")
