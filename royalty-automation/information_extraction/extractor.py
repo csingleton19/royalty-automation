@@ -9,8 +9,6 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 # Set the OpenAI API key
-# OpenAI.api_key = os.getenv("OPENAI_KEY")
-# client = (OpenAI.api_key)
 client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
 
 # Use the BASE_DIR from config to construct the path
@@ -37,7 +35,7 @@ def extract_structured_data_with_llm(data):
     prompt = f"""You are a royalty automation extraction tool. Ignore any unstructured data 
     and extract and format only the structured data as a nested dictionary from the following: 
     {data}
-    Ensure the output is in a valid JSON format, only include the nested dictionary. 
+    Ensure the output is in a valid JSON format, only include the nested dictionary. Name the nested dictionary 'royalties'
     """
     
     response = client.chat.completions.create(
@@ -79,40 +77,86 @@ def extract_unstructured_data_with_llm(data):
     
     return unstructured_data
 
-def create_quarterly_dataframes(structured_data):
-    quarterly_dfs = {}
-    for quarter, details in structured_data.items():
-        # Create DataFrame for the total summary
-        # total_df = pd.DataFrame([details["total"]])
+# def create_quarterly_dataframes(structured_data):
+#     quarterly_dfs = {}
+#     for quarter, details in structured_data.items():
+#         # Create DataFrame for the total summary
+#         # total_df = pd.DataFrame([details["total"]])
         
-        # Create DataFrame for the individual authors
-        authors_df = pd.DataFrame(details["Authors"])
+#         # Create DataFrame for the individual authors
+#         authors_df = pd.DataFrame(details["Authors"])
         
-        # Store both in a dictionary for easy access
-        quarterly_dfs[quarter] = {"total": total_df, "authors": authors_df}
-    return quarterly_dfs
+#         # Store both in a dictionary for easy access
+#         quarterly_dfs[quarter] = {"total": total_df, "authors": authors_df}
+#     return quarterly_dfs
+
+# def extract_and_save_authors_data(structured_data):
+#     # Process the authors' data across all quarters and save to CSV
+#     all_authors_dfs = []
+    
+#     for quarter, details in structured_data.items():
+#         # Extract the authors' data from the current quarter
+#         authors_df = pd.DataFrame(details["Authors"])
+#         authors_df["Quarter"] = quarter  # Add a Quarter column for tracking
+#         all_authors_dfs.append(authors_df)
+    
+#     # Concatenate all author data across quarters
+#     combined_df = pd.concat(all_authors_dfs, ignore_index=True)
+    
+#     # Define the directory and filename for the CSV
+#     csv_dir = os.path.join(BASE_DIR, 'storage/csv')
+#     os.makedirs(csv_dir, exist_ok=True)
+#     csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
+    
+#     # Save the DataFrame to a CSV file
+#     combined_df.to_csv(csv_file_path, index=False)
+#     print(f"Combined authors' data saved to {csv_file_path}")
+
 
 def extract_and_save_authors_data(structured_data):
-    # Process the authors' data across all quarters and save to CSV
+    # Ensure "RoyaltyStatements" exists in the structured data
+    if "royalties" not in structured_data:
+        print("No 'royalties' data found.")
+        return
+    
+    # Access the quarterly data within "royalties"
+    quarterly_data = structured_data["royalties"]
     all_authors_dfs = []
     
-    for quarter, details in structured_data.items():
-        # Extract the authors' data from the current quarter
-        authors_df = pd.DataFrame(details["Authors"])
-        authors_df["Quarter"] = quarter  # Add a Quarter column for tracking
+    # Iterate over each quarter
+    for quarter, details in quarterly_data.items():
+        # Check if "Authors" is in the details for the quarter
+        if "Authors" not in details:
+            print(f"No 'Authors' data found for {quarter}")
+            continue
+        
+        # Process authors' data for the current quarter
+        authors_data = []
+        for author_info in details["Authors"]:
+            # Assume author_info is a dictionary with all author metrics
+            author_data = {"Quarter": quarter}
+            author_data.update(author_info)  # Include all author info
+            authors_data.append(author_data)
+        
+        # Create a DataFrame for the current quarter's authors
+        authors_df = pd.DataFrame(authors_data)
         all_authors_dfs.append(authors_df)
     
     # Concatenate all author data across quarters
-    combined_df = pd.concat(all_authors_dfs, ignore_index=True)
-    
-    # Define the directory and filename for the CSV
-    csv_dir = os.path.join(BASE_DIR, 'storage/csv')
-    os.makedirs(csv_dir, exist_ok=True)
-    csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
-    
-    # Save the DataFrame to a CSV file
-    combined_df.to_csv(csv_file_path, index=False)
-    print(f"Combined authors' data saved to {csv_file_path}")
+    if all_authors_dfs:
+        combined_df = pd.concat(all_authors_dfs, ignore_index=True)
+        
+        # Define the directory and filename for the CSV using BASE_DIR directly
+        csv_dir = os.path.join(BASE_DIR, 'storage/csv')
+        os.makedirs(csv_dir, exist_ok=True)
+        csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
+        
+        # Save the DataFrame to a CSV file
+        combined_df.to_csv(csv_file_path, index=False)
+        print(f"Combined authors' data saved to {csv_file_path}")
+    else:
+        print("No author data found across all quarters.")
+
 
 
 def save_data_as_json(data, file_name, base_dir='storage/json_data'):
@@ -132,9 +176,6 @@ def save_data_as_json(data, file_name, base_dir='storage/json_data'):
     with open(json_file_path, 'w') as json_file:
         json.dump(data, json_file, indent=4)
     print(f"Data saved to {json_file_path}")
-
-# Example usage:
-# save_data_as_json(unstructured_data, 'output_data')
 
 
 if __name__ == "__main__":
