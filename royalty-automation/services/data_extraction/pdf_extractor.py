@@ -1,14 +1,7 @@
 import os
 import json
 from langchain_community.document_loaders import PyPDFLoader
-
-# Centralized storage paths
-PDF_STORAGE_PATH = "storage/pdfs/"
-JSON_STORAGE_PATH = "storage/json_data/"
-
-# Ensure storage directories exist
-os.makedirs(PDF_STORAGE_PATH, exist_ok=True)
-os.makedirs(JSON_STORAGE_PATH, exist_ok=True)
+from config import PDF_STORAGE_PATH, JSON_STORAGE_PATH
 
 # Function to extract raw text from a PDF
 def extract_pdf_content(pdf_path: str):

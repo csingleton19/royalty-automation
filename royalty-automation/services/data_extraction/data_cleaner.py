@@ -2,14 +2,7 @@ import os
 import re
 import json
 import pickle
-
-# Centralized storage path for pickle files
-PICKLE_STORAGE_PATH = "storage/pickles/"
-JSON_STORAGE_PATH = "storage/json_data/"
-
-# Ensure storage directories exist
-os.makedirs(PICKLE_STORAGE_PATH, exist_ok=True)
-os.makedirs(JSON_STORAGE_PATH, exist_ok=True)
+from config import PICKLE_STORAGE_PATH, JSON_STORAGE_PATH
 
 def load_json_file(filename):
     """Load a JSON file from the centralized JSON storage or prompt for a new file."""

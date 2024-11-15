@@ -5,6 +5,7 @@ import pandas as pd
 from openai import OpenAI
 from config.config import BASE_DIR
 from dotenv import load_dotenv
+from config import PICKLE_STORAGE_PATH
 
 # Load environment variables from .env file
 load_dotenv()
@@ -12,7 +13,7 @@ load_dotenv()
 client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
 
 # Use the BASE_DIR from config to construct the path
-pkl_file_path = os.path.join(BASE_DIR, 'storage/pickles', 'cleaned_data.pkl')
+pkl_file_path = os.path.join(PICKLE_STORAGE_PATH, 'cleaned_data.pkl')
 
 def load_cleaned_data():
     try:

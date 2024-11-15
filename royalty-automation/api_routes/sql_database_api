@@ -3,7 +3,7 @@ from services.database.sql_database_handler import initialize_database, load_dat
 
 sql_db_api_blueprint = Blueprint('sql_db_api', __name__)
 
-@data_api.route('/database/initialize', methods=['GET'])
+@sql_db_api_blueprint.route('/database/initialize', methods=['GET'])
 def initialize():
     try:
         initialize_database()
@@ -11,7 +11,7 @@ def initialize():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@data_api.route('/database/load', methods=['POST'])
+@sql_db_api_blueprint.route('/database/load', methods=['POST'])
 def load_data():
     try:
         load_data_into_database()

@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, jsonify
-from api.extraction_api import extraction_api_blueprint  # Import API blueprints
-from api.sql_database_api import sql_db_api_blueprint
-from api.vector_database_api import vector_db_api_blueprint
+from api_routes.extraction_api import extraction_api_blueprint  # Import API blueprints
+from api_routes.sql_database_api import sql_db_api_blueprint
+from api_routes.vector_database_api import vector_db_api_blueprint
 
 app = Flask(__name__)
 
