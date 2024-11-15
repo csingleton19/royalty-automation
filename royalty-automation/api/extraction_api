@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Blueprint, jsonify, request
 from services.data_extraction.pdf_extractor import extract_pdf_content
 from services.data_extraction.data_cleaner import clean_extracted_text
 from services.information_extraction.extractor import (
@@ -11,7 +11,8 @@ from config.config import BASE_DIR
 import os
 import pickle
 
-app = Flask(__name__)
+# Create a Blueprint instance
+extraction_api_blueprint = Blueprint("extraction_api", __name__)
 
 # Load cleaned data from centralized storage
 def load_cleaned_data():
@@ -23,12 +24,8 @@ def load_cleaned_data():
     except FileNotFoundError:
         return None
 
-
-@app.route("/api/extract-pdf", methods=["POST"])
+@extraction_api.route("/extract-pdf", methods=["POST"])
 def extract_pdf():
-    """
-    Endpoint to extract text content from a PDF.
-    """
     if "file" not in request.files:
         return jsonify({"error": "No file provided"}), 400
 
@@ -36,11 +33,9 @@ def extract_pdf():
     if not file.filename.endswith(".pdf"):
         return jsonify({"error": "Only PDF files are supported"}), 400
 
-    # Save uploaded file to storage
     pdf_storage_path = os.path.join(BASE_DIR, "storage/pdfs", file.filename)
     file.save(pdf_storage_path)
 
-    # Extract text content from PDF
     try:
         extracted_text = extract_pdf_content(pdf_storage_path)
         return jsonify({"status": "success", "extracted_text": extracted_text}), 200
@@ -48,11 +43,8 @@ def extract_pdf():
         return jsonify({"error": f"Failed to extract PDF content: {str(e)}"}), 500
 
 
-@app.route("/api/clean-text", methods=["POST"])
+@extraction_api.route("/clean-text", methods=["POST"])
 def clean_text():
-    """
-    Endpoint to clean extracted text.
-    """
     data = request.get_json()
     if not data or "text" not in data:
         return jsonify({"error": "Text to clean not provided"}), 400
@@ -62,11 +54,8 @@ def clean_text():
     return jsonify({"status": "success", "cleaned_text": cleaned_text}), 200
 
 
-@app.route("/api/extract-structured-data", methods=["POST"])
+@extraction_api.route("/extract-structured-data", methods=["POST"])
 def extract_structured_data():
-    """
-    Endpoint to extract structured data using LLM.
-    """
     data = load_cleaned_data()
     if data is None:
         return jsonify({"error": "Cleaned data not found"}), 404
@@ -78,11 +67,8 @@ def extract_structured_data():
         return jsonify({"error": f"Failed to extract structured data: {str(e)}"}), 500
 
 
-@app.route("/api/extract-unstructured-data", methods=["POST"])
+@extraction_api.route("/extract-unstructured-data", methods=["POST"])
 def extract_unstructured_data():
-    """
-    Endpoint to extract unstructured data using LLM.
-    """
     data = load_cleaned_data()
     if data is None:
         return jsonify({"error": "Cleaned data not found"}), 404
@@ -94,11 +80,8 @@ def extract_unstructured_data():
         return jsonify({"error": f"Failed to extract unstructured data: {str(e)}"}), 500
 
 
-@app.route("/api/save-authors-data", methods=["POST"])
+@extraction_api.route("/save-authors-data", methods=["POST"])
 def save_authors_data():
-    """
-    Endpoint to extract and save authors' data from structured data.
-    """
     data = load_cleaned_data()
     if data is None:
         return jsonify({"error": "Cleaned data not found"}), 404
@@ -111,11 +94,8 @@ def save_authors_data():
         return jsonify({"error": f"Failed to save authors' data: {str(e)}"}), 500
 
 
-@app.route("/api/save-unstructured-data", methods=["POST"])
+@extraction_api.route("/save-unstructured-data", methods=["POST"])
 def save_unstructured_data():
-    """
-    Endpoint to save unstructured data as JSON.
-    """
     data = load_cleaned_data()
     if data is None:
         return jsonify({"error": "Cleaned data not found"}), 404
@@ -127,6 +107,3 @@ def save_unstructured_data():
     except Exception as e:
         return jsonify({"error": f"Failed to save unstructured data: {str(e)}"}), 500
 
-
-if __name__ == "__main__":
-    app.run(debug=True)

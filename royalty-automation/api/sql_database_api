@@ -1,7 +1,7 @@
 from flask import Blueprint, jsonify
 from services.database.sql_database_handler import initialize_database, load_data_into_database
 
-data_api = Blueprint('data_api', __name__)
+sql_db_api_blueprint = Blueprint('sql_db_api', __name__)
 
 @data_api.route('/database/initialize', methods=['GET'])
 def initialize():
