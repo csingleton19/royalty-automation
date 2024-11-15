@@ -77,42 +77,6 @@ def extract_unstructured_data_with_llm(data):
     
     return unstructured_data
 
-# def create_quarterly_dataframes(structured_data):
-#     quarterly_dfs = {}
-#     for quarter, details in structured_data.items():
-#         # Create DataFrame for the total summary
-#         # total_df = pd.DataFrame([details["total"]])
-        
-#         # Create DataFrame for the individual authors
-#         authors_df = pd.DataFrame(details["Authors"])
-        
-#         # Store both in a dictionary for easy access
-#         quarterly_dfs[quarter] = {"total": total_df, "authors": authors_df}
-#     return quarterly_dfs
-
-# def extract_and_save_authors_data(structured_data):
-#     # Process the authors' data across all quarters and save to CSV
-#     all_authors_dfs = []
-    
-#     for quarter, details in structured_data.items():
-#         # Extract the authors' data from the current quarter
-#         authors_df = pd.DataFrame(details["Authors"])
-#         authors_df["Quarter"] = quarter  # Add a Quarter column for tracking
-#         all_authors_dfs.append(authors_df)
-    
-#     # Concatenate all author data across quarters
-#     combined_df = pd.concat(all_authors_dfs, ignore_index=True)
-    
-#     # Define the directory and filename for the CSV
-#     csv_dir = os.path.join(BASE_DIR, 'storage/csv')
-#     os.makedirs(csv_dir, exist_ok=True)
-#     csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
-    
-#     # Save the DataFrame to a CSV file
-#     combined_df.to_csv(csv_file_path, index=False)
-#     print(f"Combined authors' data saved to {csv_file_path}")
-
-
 def extract_and_save_authors_data(structured_data):
     # Ensure "RoyaltyStatements" exists in the structured data
     if "royalties" not in structured_data:
