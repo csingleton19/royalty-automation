@@ -15,16 +15,6 @@ def load_json_file(filename):
     else:
         # Ask the user to provide a filepath
         print(f"{filename} not found in {JSON_STORAGE_PATH}. Please provide the path to the JSON file.")
-        filepath = input("You can drag and drop the file here or enter the file path: ").strip()
-
-        # Check if the provided path exists
-        if os.path.isfile(filepath):
-            with open(filepath, 'r') as file:
-                data = json.load(file)
-                return data
-        else:
-            print("The provided file path is invalid. Please check and try again.")
-            return None
 
 # Replace 'extracted_data.json' with your desired JSON filename
 filename = 'extracted_data.json'
