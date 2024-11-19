@@ -14,7 +14,7 @@ app = Flask(__name__)
 app.register_blueprint(extraction_api_blueprint, url_prefix="/api/extraction")
 app.register_blueprint(sql_db_api_blueprint, url_prefix="/api/sql")
 app.register_blueprint(vector_db_api_blueprint, url_prefix="/api/vector")
-app.register_blueprint(query_api_blueprint,"api/query" )
+app.register_blueprint(query_api_blueprint, url_prefix="/api/query")
 
 @app.route("/")
 def index():
