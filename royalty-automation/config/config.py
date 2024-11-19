@@ -2,6 +2,7 @@ import os
 
 # Base directory of the project (root directory)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 # Storage directories
 CSV_STORAGE_PATH = os.path.join(BASE_DIR, "storage", "csv")

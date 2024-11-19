@@ -2,15 +2,19 @@ project/
 │
 ├── services/               # Core functionality
 │   ├── data_extraction/
+|       ├── __init__.py
 │       ├── pdf_extractor.py
 │       ├── data_cleaner.py
 │   ├── information_extraction/
+|       ├── __init__.py
 |       ├── extractor.py
 │   ├── database/
+|       ├── __init__.py
 |       ├── sql_dabatase_handler.py
 |       ├── vector_database_handler.py
 │
-├── api/                    # API routes
+├── api_routes/                    # API routes
+|   ├── __init__.py
 │   ├── extraction_api.py   
 │   ├── sql_database_api.py
 |   ├── vector_database_api.py    
@@ -21,6 +25,7 @@ project/
 │   ├── templates/
 │
 ├── config/
+|   ├── __init__.py
 │   ├── config.py
 ├── storage/
 │   ├── pdfs/          # For storing PDF files to be processed

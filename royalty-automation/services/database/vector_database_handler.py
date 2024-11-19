@@ -13,6 +13,10 @@ openai_api_key = os.getenv("OPENAI_KEY")
 openai.api_key = openai_api_key
 client = openai.OpenAI(api_key=os.environ.get("OPENAI_KEY"))
 
+# Ensure the API key is loaded
+if not pinecone_api_key:
+    raise ValueError("PINECONE_KEY is not set in the environment variables.")
+
 # Initialize Pinecone using the Pinecone class
 pc = Pinecone(api_key=pinecone_api_key)
 index_name = "royalties"
