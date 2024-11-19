@@ -24,38 +24,6 @@ def extract_pdf():
     
     return jsonify({"message": "PDF processed successfully", "output": json_output})
 
-# @extraction_api_blueprint.route("/clean-text", methods=["POST"])
-# def clean_text():
-#     # Get the uploaded JSON file
-#     json_file = request.files.get("json")
-#     if not json_file:
-#         return jsonify({"error": "No JSON file uploaded"}), 400
-    
-#     # Process the JSON file 
-#     pickle_output = data_cleaner(json_file)
-    
-#     # Return the Pickle file or metadata about it
-#     return jsonify({"message": "Text cleaned successfully", "output": pickle_output})
-
-# @extraction_api_blueprint.route("/clean-text", methods=["POST"])
-# def clean_text():
-#     """
-#     API endpoint to clean text from an uploaded JSON file.
-#     """
-#     # Get the uploaded JSON file
-#     json_file = request.files.get("json")
-#     if not json_file:
-#         return jsonify({"error": "No JSON file uploaded"}), 400
-
-#     # Process the JSON file
-#     pickle_output = data_cleaner(json_file)
-
-#     if not pickle_output:
-#         return jsonify({"error": "Failed to process the JSON file"}), 500
-
-#     # Return the Pickle file or metadata about it
-#     return jsonify({"message": "Text cleaned successfully", "output_file": pickle_output})
-
 @extraction_api_blueprint.route("/clean-text", methods=["POST"])
 def clean_text():
     """
@@ -70,23 +38,19 @@ def clean_text():
     # Return the Pickle file or metadata about it
     return jsonify({"message": "Text cleaned successfully", "output_file": pickle_output})
 
-
 @extraction_api_blueprint.route("/extract-data", methods=["POST"])
 def extractor_function():
-    # Get the uploaded Pickle file
-    pickle_file = request.files.get("pickle")
-    if not pickle_file:
-        return jsonify({"error": "No Pickle file uploaded"}), 400
-    
-    # Process the Pickle file (assumes extractor handles the file object)
-    pickle_output, csv_output = extractor(pickle_file)
-    
-    # Return metadata about the outputs
-    return jsonify({
-        "message": "Data extracted successfully",
-        "pickle_output": pickle_output,
-        "csv_output": csv_output
-    })
+    try:
+        # Call the extractor function directly
+        structured_data, unstructured_data = extractor()
+        
+        return jsonify({
+            "message": "Data extracted successfully",
+            "structured_data": structured_data,
+            "unstructured_data": unstructured_data
+        })
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 

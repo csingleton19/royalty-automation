@@ -3,7 +3,7 @@ from services.database.sql_database_handler import initialize_database, load_dat
 
 sql_db_api_blueprint = Blueprint('sql_db_api', __name__)
 
-@sql_db_api_blueprint.route('/database/initialize', methods=['GET'])
+@sql_db_api_blueprint.route('/database/initialize', methods=['POST'])
 def initialize():
     try:
         initialize_database()

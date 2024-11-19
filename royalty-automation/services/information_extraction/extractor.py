@@ -147,25 +147,19 @@ def extractor():
     Function that combines all of the logic
     """
     data = load_cleaned_data()
-    if data is not None:
-        print("Cleaned data loaded successfully!")
+    if data is None:
+        raise ValueError("Failed to load cleaned data")
         
-        structured_data = extract_structured_data_with_llm(data)
-        unstructured_data = extract_unstructured_data_with_llm(data)
-        print("Structured Data (Dictionary):")
-        print(structured_data)
-        print("Unstructured Data:")
-        print(unstructured_data)
-
-        # Save the combined authors' data to CSV
-        if isinstance(structured_data, dict) and structured_data:
-            extract_and_save_authors_data(structured_data)
-        else:
-            print("Structured data is not in dictionary format. Please check the extraction.")
-        
-        save_data_as_json(unstructured_data, 'output_data')
-    else:
-        print("Failed to load cleaned data.")
+    structured_data = extract_structured_data_with_llm(data)
+    unstructured_data = extract_unstructured_data_with_llm(data)
+    
+    # Save the combined authors' data to CSV
+    if isinstance(structured_data, dict) and structured_data:
+        extract_and_save_authors_data(structured_data)
+    
+    save_data_as_json(unstructured_data, 'output_data')
+    
+    return structured_data, unstructured_data
 
 
 if __name__ == "__main__":
