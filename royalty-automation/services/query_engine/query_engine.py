@@ -6,7 +6,7 @@ class QueryEngine:
         self.vector_db = index  # Pinecone index from vector_database_handler
         self.sql_db_path = DB_PATH
 
-    def query_vector_db(self, query_text, top_k=5):
+    def query_vector_db(self, query_text, top_k=2):
         """Query the vector database for similar entries"""
         try:
             # Generate embedding for query text

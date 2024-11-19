@@ -1,17 +1,19 @@
 from flask import Blueprint, request, jsonify
-from services.query_engine.query_engine import QueryEngine
+from services.query_engine.query_agent import QueryAgent
 
 query_api_blueprint = Blueprint('query_api', __name__)
-engine = QueryEngine()
+agent = QueryAgent()
 
 @query_api_blueprint.route('/query', methods=['POST'])
 def query():
     try:
         data = request.json
-        query_type = data.get('type')
-        query_params = data.get('params')
+        user_query = data.get('query')
         
-        results = engine.route_query(query_type, query_params)
-        return jsonify({"results": results})
+        if not user_query:
+            return jsonify({"error": "No query provided"}), 400
+            
+        results = agent.process_query(user_query)
+        return jsonify(results)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
