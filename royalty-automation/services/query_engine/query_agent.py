@@ -26,7 +26,7 @@ class QueryAgent:
         """
         
         response = client.chat.completions.create(
-            model="gpt-4.0-mini",
+            model="gpt-4o-mini",
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": query}
