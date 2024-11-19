@@ -1,17 +1,20 @@
 import sqlite3
 import os
 import pandas as pd
+from config import BASE_DIR, CSV_STORAGE_PATH
 
-# Define paths to the database and CSV file
-DB_PATH = os.path.join("database", "data.db")
-CSV_PATH = os.path.join("storage", "csv", "combined_data.csv")
+# Update DB_PATH to use storage/sql directory
+DB_PATH = os.path.join(BASE_DIR, "storage", "sql", "data.db")
+CSV_PATH = os.path.join(CSV_STORAGE_PATH, "combined_data.csv")
 TABLE_NAME = "combined_data"
 
 def initialize_database():
     """Create a connection to the SQLite database, creating the file if it doesn't exist."""
+    # Create database directory if it doesn't exist
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    
     # Check if the database file already exists
     if not os.path.exists(DB_PATH):
-        # Connect to the SQLite database (will create the file if it doesn't exist)
         with sqlite3.connect(DB_PATH) as conn:
             print("Database created successfully.")
     else:
