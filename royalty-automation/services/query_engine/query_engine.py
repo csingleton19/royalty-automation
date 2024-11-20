@@ -1,10 +1,25 @@
 from services.database.sql_database_handler import sqlite3, DB_PATH
 from services.database.vector_database_handler import index, get_embedding
+from pinecone import Pinecone
+from dotenv import load_dotenv
+import os
+
+# Load environment variables
+load_dotenv()
+pinecone_api_key = os.getenv("PINECONE_KEY")
+
+# Ensure the API key is loaded
+if not pinecone_api_key:
+    raise ValueError("PINECONE_KEY is not set in the environment variables.")
+
+# Initialize Pinecone using the Pinecone class
+pc = Pinecone(api_key=pinecone_api_key)
+index_name = "royalties"
 
 class QueryEngine:
     def __init__(self):
         self.vector_db = index  # Pinecone index from vector_database_handler
-        self.sql_db_path = DB_PATH
+        self.sql_db_path = DB_PATH 
 
     def query_vector_db(self, query_text, top_k=2):
         """Query the vector database for similar entries"""
