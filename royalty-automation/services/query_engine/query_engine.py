@@ -24,52 +24,29 @@ class QueryEngine:
         print(f"Vector database index type: {type(self.vector_db)}")
         print("Vector database index successfully initialized")
 
-def query_vector_db(self, query_text, top_k=2):
-    """Query the vector database for similar entries"""
-    try:
-        # Debug prints
-        print(f"Generating embedding for query: {query_text}")
-        query_embedding = get_embedding(query_text)
-        print(f"Generated embedding length: {len(query_embedding)}")
-        
-        print(f"Querying vector database with top_k={top_k}")
-        results = self.vector_db.query(
-            vector=query_embedding,
-            top_k=top_k,
-            include_metadata=True
-        )
-        print(f"Query results: {results}")
-        return results
-    except AttributeError as e:
-        print(f"AttributeError in query_vector_db: {str(e)}")
-        print(f"vector_db type: {type(self.vector_db)}")
-        raise
-    except Exception as e:
-        print(f"Unexpected error in query_vector_db: {str(e)}")
-        raise
-    # def __init__(self):
-    #     self.vector_db = index
-    #     if self.vector_db is None:
-    #         raise ValueError("Vector database index not properly initialized")
-    #     else:
-    #         print("successfully initialized")
-    #     self.sql_db_path = DB_PATH 
-
-    # def query_vector_db(self, query_text, top_k=2):
-    #     """Query the vector database for similar entries"""
-    #     try:
-    #         # Generate embedding for query text
-    #         query_embedding = get_embedding(query_text)
+    def query_vector_db(self, query_text, top_k=2):  # <- Properly indented
+        """Query the vector database for similar entries"""
+        try:
+            # Debug prints
+            print(f"Generating embedding for query: {query_text}")
+            query_embedding = get_embedding(query_text)
+            print(f"Generated embedding length: {len(query_embedding)}")
             
-    #         # Search Pinecone index
-    #         results = self.vector_db.query(
-    #             vector=query_embedding,
-    #             top_k=top_k,
-    #             include_metadata=True
-    #         )
-    #         return results
-    #     except Exception as e:
-    #         raise Exception(f"Vector database query failed: {str(e)}")
+            print(f"Querying vector database with top_k={top_k}")
+            results = self.vector_db.query(
+                vector=query_embedding,
+                top_k=top_k,
+                include_metadata=True
+            )
+            print(f"Query results: {results}")
+            return results
+        except AttributeError as e:
+            print(f"AttributeError in query_vector_db: {str(e)}")
+            print(f"vector_db type: {type(self.vector_db)}")
+            raise
+        except Exception as e:
+            print(f"Unexpected error in query_vector_db: {str(e)}")
+            raise
 
     def query_sql_db(self, query):
         """Query the SQL database"""
