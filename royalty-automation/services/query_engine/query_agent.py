@@ -68,7 +68,7 @@ class QueryAgent:
             if intent["query_type"] == "semantic":
                 results = self.query_engine.query_vector_db(
                     query_text=user_query,
-                    top_k=5
+                    top_k=2
                 )
                 return {"results": results, "type": "semantic"}
 

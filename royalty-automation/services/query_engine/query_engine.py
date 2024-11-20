@@ -24,34 +24,32 @@ class QueryEngine:
         print(f"Vector database index type: {type(self.vector_db)}")
         print("Vector database index successfully initialized")
 
-    def query_vector_db(self, query_text, top_k=2):  
-        """Query the vector database for similar entries"""
+    def query_vector_db(self, query_text, top_k=2):
         try:
-            # Debug prints
-            print(f"Generating embedding for query: {query_text}")
             query_embedding = get_embedding(query_text)
-            print(f"Generated embedding length: {len(query_embedding)}")
-            
-            print(f"Querying vector database with top_k={top_k}")
             results = self.vector_db.query(
                 vector=query_embedding,
                 top_k=top_k,
                 include_metadata=True
             )
-            print(f"Query results: {results}")
+            
+            # Add validation for empty values
             if not results or not results.get('matches'):
                 return {"matches": [], "message": "No results found"}
+                
+            # Validate that matches have non-empty values
+            matches = results.get('matches', [])
+            valid_matches = [m for m in matches if m.get('values')]
             
-            return results
-        except AttributeError as e:
-            print(f"AttributeError in query_vector_db: {str(e)}")
-            print(f"vector_db type: {type(self.vector_db)}")
-            raise
+            if not valid_matches:
+                return {"matches": [], "message": "No valid matches found"}
+                
+            return {"matches": valid_matches}
+            
         except Exception as e:
             print(f"Unexpected error in query_vector_db: {str(e)}")
             raise
-
-
+ 
     def query_sql_db(self, query):
         """Query the SQL database"""
         try:

@@ -47,17 +47,21 @@ def parse_biographies(raw_text):
         data.append({"id": str(i+1), "text": bio.strip()})
     return data
 
-# Function to upload embeddings to Pinecone
 def upload_embeddings(raw_text):
     data = parse_biographies(raw_text)
     embeddings = []
     for item in data:
         text = item['text']
-        vector = get_embedding(text)  # Get embedding from OpenAI
-        embeddings.append({"id": item['id'], "values": vector})  # Use unique IDs if possible
+        vector = get_embedding(text)
+        if vector:  # Validate vector exists
+            embeddings.append({
+                "id": item['id'],
+                "values": vector,
+                "metadata": {"text": text}  # Include metadata
+            })
 
-    # Upload to Pinecone
-    index.upsert(vectors=embeddings)
+    if embeddings:
+        index.upsert(vectors=embeddings)
 
 if __name__ == "__main__":
     with open("storage/json_data/output_data.json", 'r') as f:
