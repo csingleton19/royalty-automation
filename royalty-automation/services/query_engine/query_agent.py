@@ -5,6 +5,7 @@ from openai import OpenAI
 from config.config import BASE_DIR
 from dotenv import load_dotenv
 from typing import Dict, Any, List, Union
+import json
 
 # Load environment variables from .env file
 load_dotenv()
@@ -19,9 +20,9 @@ class QueryAgent:
         """Determine the best query strategy using OpenAI"""
         system_prompt = """
         Analyze the query and determine:
-        1. If it needs semantic search (for natural language, similarity)
-        2. If it needs structured SQL (for specific data lookups)
-        3. What specific parameters are needed
+        1. If it needs semantic search (return "semantic")
+        2. If it needs structured SQL (return "structured")
+        3. If it needs both (return "hybrid")
         Return as JSON with fields: query_type, params
         """
         
@@ -34,7 +35,7 @@ class QueryAgent:
             response_format={ "type": "json_object" }
         )
         
-        return response.choices[0].message.content
+        return json.loads(response.choices[0].message.content)
 
     def format_sql_query(self, intent: Dict[str, Any]) -> str:
         """Convert intent parameters into SQL query"""
