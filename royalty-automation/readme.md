@@ -32,6 +32,7 @@ project/
 │   ├── json_data/     # For saving extracted data in JSON format
 │   ├── outputs/       # For generated outputs like final processed results, reports, etc.
 │   └── logs/          # For logging information if needed
+|   ├── sql/           # For storing sql database
 ├── utils.py
 ├── main.py
 ├── requirements.txt
