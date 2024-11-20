@@ -47,25 +47,51 @@ def parse_biographies(raw_text):
         data.append({"id": str(i+1), "text": bio.strip()})
     return data
 
+# def upload_embeddings(raw_text):
+#     data = parse_biographies(raw_text)
+#     embeddings = []
+#     for item in data:
+#         text = item['text']
+#         vector = get_embedding(text)
+#         if vector:  # Validate vector exists
+#             embeddings.append({
+#                 "id": item['id'],
+#                 "values": vector,
+#                 "metadata": {"text": text}  # Include metadata
+#             })
+
+#     if embeddings:
+#         index.upsert(vectors=embeddings)
+
 def upload_embeddings(raw_text):
     data = parse_biographies(raw_text)
     embeddings = []
     for item in data:
         text = item['text']
-        vector = get_embedding(text)
-        if vector:  # Validate vector exists
-            embeddings.append({
-                "id": item['id'],
-                "values": vector,
-                "metadata": {"text": text}  # Include metadata
-            })
+        try:
+            vector = get_embedding(text)
+            print(f"Generated embedding for text: {text[:50]}...")  # Debug print
+            if vector:  # Validate vector exists
+                embeddings.append({
+                    "id": item['id'],
+                    "values": vector,
+                    "metadata": {"text": text}
+                })
+        except Exception as e:
+            print(f"Error generating embedding: {str(e)}")
 
     if embeddings:
-        index.upsert(vectors=embeddings)
+        try:
+            print(f"Uploading {len(embeddings)} embeddings to Pinecone")
+            index.upsert(vectors=embeddings)
+            print("Upload complete")
+        except Exception as e:
+            print(f"Error uploading to Pinecone: {str(e)}")
 
 if __name__ == "__main__":
     with open("storage/json_data/output_data.json", 'r') as f:
         raw_text = f.read()
+    print("Starting upload process...")
     upload_embeddings(raw_text)
 
 

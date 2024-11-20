@@ -24,6 +24,40 @@ class QueryEngine:
         print(f"Vector database index type: {type(self.vector_db)}")
         print("Vector database index successfully initialized")
 
+    # def query_vector_db(self, query_text, top_k=2):
+    #     try:
+    #         query_embedding = get_embedding(query_text)
+    #         results = self.vector_db.query(
+    #             vector=query_embedding,
+    #             top_k=top_k,
+    #             include_metadata=True
+    #         )
+            
+    #         print("Debug - Raw Pinecone results:", results)  # Keep this debug line
+            
+    #         # Add validation for empty results
+    #         if not results or not results.get('matches'):
+    #             return {"matches": [], "message": "No results found"}
+                
+    #         # Validate matches based on metadata instead of values
+    #         matches = results.get('matches', [])
+    #         valid_matches = [m for m in matches if m.get('metadata')]
+            
+    #         if not valid_matches:
+    #             return {"matches": [], "message": "No valid matches found"}
+                
+    #         # Format the response to include relevant information
+    #         formatted_matches = [{
+    #             'score': m.get('score'),
+    #             'text': m.get('metadata', {}).get('text'),
+    #             'id': m.get('id')
+    #         } for m in valid_matches]
+            
+    #         return {"matches": formatted_matches}
+            
+    #     except Exception as e:
+    #         print(f"Unexpected error in query_vector_db: {str(e)}")
+    #         raise
     def query_vector_db(self, query_text, top_k=2):
         try:
             query_embedding = get_embedding(query_text)
@@ -33,18 +67,22 @@ class QueryEngine:
                 include_metadata=True
             )
             
-            # Add validation for empty values
+            print("Debug - Raw Pinecone results:", results)
+            
             if not results or not results.get('matches'):
                 return {"matches": [], "message": "No results found"}
                 
-            # Validate that matches have non-empty values
-            matches = results.get('matches', [])
-            valid_matches = [m for m in matches if m.get('values')]
+            # Format matches to include relevant information
+            formatted_matches = [{
+                'score': match.get('score'),
+                'text': match.get('metadata', {}).get('text'),
+                'id': match.get('id')
+            } for match in results.get('matches', [])]
             
-            if not valid_matches:
+            if not formatted_matches:
                 return {"matches": [], "message": "No valid matches found"}
                 
-            return {"matches": valid_matches}
+            return {"matches": formatted_matches}
             
         except Exception as e:
             print(f"Unexpected error in query_vector_db: {str(e)}")
