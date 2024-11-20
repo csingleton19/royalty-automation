@@ -24,7 +24,7 @@ class QueryEngine:
         print(f"Vector database index type: {type(self.vector_db)}")
         print("Vector database index successfully initialized")
 
-    def query_vector_db(self, query_text, top_k=2):  # <- Properly indented
+    def query_vector_db(self, query_text, top_k=2):  
         """Query the vector database for similar entries"""
         try:
             # Debug prints
@@ -39,6 +39,9 @@ class QueryEngine:
                 include_metadata=True
             )
             print(f"Query results: {results}")
+            if not results or not results.get('matches'):
+                return {"matches": [], "message": "No results found"}
+            
             return results
         except AttributeError as e:
             print(f"AttributeError in query_vector_db: {str(e)}")
@@ -47,6 +50,7 @@ class QueryEngine:
         except Exception as e:
             print(f"Unexpected error in query_vector_db: {str(e)}")
             raise
+
 
     def query_sql_db(self, query):
         """Query the SQL database"""
