@@ -20,7 +20,6 @@ export const api = {
   initializeDatabase: async () => {
     return axios.post(`${API_BASE_URL}/database/initialize`);
   },
-
   loadData: async () => {
     return axios.post(`${API_BASE_URL}/database/load`);
   },
@@ -29,4 +28,4 @@ export const api = {
   uploadEmbeddings: async () => {
     return axios.post(`${API_BASE_URL}/embeddings/upload`);
   }
-};
+}
