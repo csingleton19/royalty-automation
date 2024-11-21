@@ -27,10 +27,11 @@ frontend/
 ├── frontend-client/          # New React frontend
 │   ├── src/
 │   │   ├── components/      
-│   │   ├── pages/          
-│   │   ├── services/      
-│   │   ├── types/         
-│   │   └── utils/         
+│   │   ├── services/     
+|   |   |   ├── api.ts 
+│   │   ├── typess/      
+│   │   ├── hooks/         
+│   │   └── pages/      
 │   ├── package.json
 │   └── tsconfig.json
 └── app.py                  
