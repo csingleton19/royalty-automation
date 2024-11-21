@@ -1,5 +1,51 @@
-project/
+|royalty-automation/
 │
+|
+├── api_routes/                    # API routes
+|   ├── __init__.py
+│   ├── extraction_api.py  
+|   ├── query_api.py 
+│   ├── sql_database_api.py
+|   ├── vector_database_api.py   
+| 
+├── config/
+|   ├── __init__.py
+│   ├── config.py
+|
+frontend/
+├── client/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── DatabaseManager.tsx
+│   │   │   ├── Navigation.tsx
+│   │   │   ├── PDFUploader.tsx
+│   │   │   ├── QueryInterface.tsx
+│   │   │   └── VectorDBManager.tsx
+│   │   ├── services/
+│   │   │   └── api.ts
+│   │   ├── types/
+│   │   │   └── index.ts
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   ├── App.test.tsx
+│   │   ├── index.tsx
+│   │   ├── index.css
+│   │   ├── react-app-env.d.ts
+│   │   ├── reportWebVitals.ts
+│   │   └── setupTests.ts
+│   ├── public/
+│   │   ├── index.html
+│   │   ├── manifest.json
+│   │   └── robots.txt
+│   ├── .gitignore
+│   ├── README.md
+│   ├── package.json
+│   └── tsconfig.json
+├── __init__.py
+└── app.py
+|
+├── node_modules
+|
 ├── services/               # Core functionality
 │   ├── data_extraction/
 |       ├── __init__.py
@@ -15,30 +61,8 @@ project/
 │   ├── query_engine/
 |       ├── __init__.py
 |       ├── query_engine.py
-|       ├── query_agent.py
+|       ├── query_agent.py                 
 │
-├── api_routes/                    # API routes
-|   ├── __init__.py
-│   ├── extraction_api.py   
-│   ├── sql_database_api.py
-|   ├── vector_database_api.py    
-│
-frontend/
-├── frontend-client/          # New React frontend
-│   ├── src/
-│   │   ├── components/      
-│   │   ├── services/     
-|   |   |   ├── api.ts 
-│   │   ├── typess/      
-│   │   ├── hooks/         
-│   │   └── pages/      
-│   ├── package.json
-│   └── tsconfig.json
-└── app.py                  
-│
-├── config/
-|   ├── __init__.py
-│   ├── config.py
 ├── storage/
 │   ├── csv/          
 │   ├── json_data/    
