@@ -32,11 +32,11 @@ project/
 |   ├── __init__.py
 │   ├── config.py
 ├── storage/
-│   ├── pdfs/          # For storing PDF files to be processed
-│   ├── json_data/     # For saving extracted data in JSON format
-│   ├── outputs/       # For generated outputs like final processed results, reports, etc.
-│   └── logs/          # For logging information if needed
-|   ├── sql/           # For storing sql database
+│   ├── csv/          
+│   ├── json_data/    
+│   ├── pdfs/       
+│   └── pickles/          
+|   ├── sql/           
 ├── utils.py
 ├── main.py
 ├── requirements.txt
