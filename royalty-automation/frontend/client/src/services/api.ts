@@ -13,19 +13,19 @@ export const api = {
 
   // Query Processing
   processQuery: async (query: string) => {
-    return axios.post(`${API_BASE_URL}/query`, { query });
+    return axios.post(`${API_BASE_URL}/api/query/query`, { query });
   },
 
   // Database Operations
   initializeDatabase: async () => {
-    return axios.post(`${API_BASE_URL}/database/initialize`);
+    return axios.post(`${API_BASE_URL}/api/sql/database/initialize`);
   },
   loadData: async () => {
-    return axios.post(`${API_BASE_URL}/database/load`);
+    return axios.post(`${API_BASE_URL}/api/sql/database/load`);
   },
 
   // Vector Database Operations
   uploadEmbeddings: async () => {
-    return axios.post(`${API_BASE_URL}/embeddings/upload`);
+    return axios.post(`${API_BASE_URL}/api/vector/embeddings/upload`);
   }
 }
