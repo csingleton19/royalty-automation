@@ -12,6 +12,10 @@ project/
 |       ├── __init__.py
 |       ├── sql_dabatase_handler.py
 |       ├── vector_database_handler.py
+│   ├── query_engine/
+|       ├── __init__.py
+|       ├── query_engine.py
+|       ├── query_agent.py
 │
 ├── api_routes/                    # API routes
 |   ├── __init__.py
