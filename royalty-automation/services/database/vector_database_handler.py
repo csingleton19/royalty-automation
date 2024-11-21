@@ -47,22 +47,6 @@ def parse_biographies(raw_text):
         data.append({"id": str(i+1), "text": bio.strip()})
     return data
 
-# def upload_embeddings(raw_text):
-#     data = parse_biographies(raw_text)
-#     embeddings = []
-#     for item in data:
-#         text = item['text']
-#         vector = get_embedding(text)
-#         if vector:  # Validate vector exists
-#             embeddings.append({
-#                 "id": item['id'],
-#                 "values": vector,
-#                 "metadata": {"text": text}  # Include metadata
-#             })
-
-#     if embeddings:
-#         index.upsert(vectors=embeddings)
-
 def upload_embeddings(raw_text):
     data = parse_biographies(raw_text)
     embeddings = []
