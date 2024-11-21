@@ -1,0 +1,23 @@
+{
+    "name": "frontend-client",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+      "@types/node": "^16.x.x",
+      "@types/react": "^18.x.x",
+      "@types/react-dom": "^18.x.x",
+      "axios": "^1.x.x",
+      "react": "^18.x.x",
+      "react-dom": "^18.x.x",
+      "react-router-dom": "^6.x.x",
+      "typescript": "^4.x.x",
+      "@mui/material": "^5.x.x",  // Optional: for UI components
+      "@mui/icons-material": "^5.x.x"  // Optional: for icons
+    },
+    "scripts": {
+      "start": "react-scripts start",
+      "build": "react-scripts build",
+      "test": "react-scripts test",
+      "eject": "react-scripts eject"
+    }
+  }

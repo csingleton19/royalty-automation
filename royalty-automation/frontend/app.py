@@ -4,11 +4,12 @@ from api_routes.extraction_api import extraction_api_blueprint  # Import API blu
 from api_routes.sql_database_api import sql_db_api_blueprint
 from api_routes.vector_database_api import vector_db_api_blueprint
 from api_routes.query_api import query_api_blueprint
+from flask_cors import CORS
 # from config.config import JSON_STORAGE_PATH
 
 
 app = Flask(__name__)
-
+CORS(app)
 
 # Register Blueprints
 app.register_blueprint(extraction_api_blueprint, url_prefix="/api/extraction")
