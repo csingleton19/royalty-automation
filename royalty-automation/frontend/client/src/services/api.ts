@@ -5,11 +5,11 @@ const API_BASE_URL = 'http://localhost:5000'; // adjust as needed, make better l
 
 export const api = {
   // PDF Extraction
-  extractPdf: async (file: File) => {
+  processPdf: async (file: File) => {
     const formData = new FormData();
     formData.append('pdf', file);
-    return axios.post(`${API_BASE_URL}/api/extraction/extract-pdf`, formData);
-  },
+    return axios.post(`${API_BASE_URL}/api/extraction/process-pdf`, formData);
+},
 
   // Query Processing
   processQuery: async (query: string) => {

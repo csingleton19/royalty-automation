@@ -18,7 +18,7 @@ export const PdfUploader: React.FC = () => {
     
     setLoading(true);
     try {
-      const response = await api.extractPdf(file);
+      const response = await api.processPdf(file);
       console.log('Upload successful:', response.data);
     } catch (err) {
       setError('Failed to upload PDF');
