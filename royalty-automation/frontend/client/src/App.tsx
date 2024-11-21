@@ -1,7 +1,6 @@
 // src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { PdfUploader } from './components/PdfUploader';
-// Import other components
+import { PdfUploader } from './components/PDFUploader';
 
 function App() {
   return (
