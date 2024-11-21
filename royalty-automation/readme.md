@@ -23,10 +23,17 @@ project/
 │   ├── sql_database_api.py
 |   ├── vector_database_api.py    
 │
-├── frontend/
-│   ├── app.py              # Flask app serving APIs and front-end
-│   ├── static/
-│   ├── templates/
+frontend/
+├── frontend-client/          # New React frontend
+│   ├── src/
+│   │   ├── components/      
+│   │   ├── pages/          
+│   │   ├── services/      
+│   │   ├── types/         
+│   │   └── utils/         
+│   ├── package.json
+│   └── tsconfig.json
+└── app.py                  
 │
 ├── config/
 |   ├── __init__.py
