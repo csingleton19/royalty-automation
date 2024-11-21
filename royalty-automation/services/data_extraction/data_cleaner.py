@@ -37,8 +37,26 @@ def clean_extracted_text(text):
     # Remove any trailing spaces at the end of lines
     text = re.sub(r'[ \t]+$', '', text, flags=re.M)
     
+    # Clean up biography headers and formatting
+    text = re.sub(r'(\w+)\s*:\s*\n', r'**\1:**\n', text)
+    
+    # Convert paragraph style biographies to bullet points
+    text = re.sub(r'(?<=\n)(?![-•*])\s*([^:\n][^\n]+?)(?=\n)', r'- \1', text)
+    
+    # Clean up multiple spaces between bullet points
+    text = re.sub(r'\n\s*-\s+', '\n- ', text)
+    
+    # Format book titles consistently
+    text = re.sub(r'(["\'])(.*?)\1', r'*\2*', text)
+    
+    # Add proper spacing between sections
+    text = re.sub(r'(\*\*[^*]+:\*\*)\n', r'\1\n\n', text)
+    
+    # Clean up financial insights formatting
+    text = re.sub(r'(Financial Insights[^\n]*:)\n', r'**\1**\n\n', text)
+    
     return text
-
+    
 def save_cleaned_text_as_pickle(cleaned_text, filename='cleaned_data.pkl'):
     """Save the cleaned text as a pickle file."""
     pickle_path = os.path.join(PICKLE_STORAGE_PATH, filename)

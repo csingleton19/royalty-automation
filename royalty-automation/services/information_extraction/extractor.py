@@ -61,11 +61,37 @@ def extract_structured_data_with_llm(data):
     return structured_data_dict
 
 
+# def extract_unstructured_data_with_llm(data):
+#     """
+#     Uses OpenAI's API to extract unstructured data from the loaded data.
+#     """
+#     prompt = f"You are a royalty automation extraction tool. Ignore the structured data. Extract the unstructured, free-form, important information from the following: {data}"
+    
+#     response = client.chat.completions.create(
+#         model="gpt-4o-mini",  
+#         messages=[
+#             {"role": "user", "content": prompt}
+#         ]
+#     )
+    
+#     unstructured_data = response.choices[0].message.content
+    
+#     return unstructured_data
+
 def extract_unstructured_data_with_llm(data):
     """
     Uses OpenAI's API to extract unstructured data from the loaded data.
     """
-    prompt = f"You are a royalty automation extraction tool. Ignore the structured data. Extract the unstructured, free-form, important information from the following: {data}"
+    prompt = f"""You are a royalty automation extraction tool. Extract and format the unstructured data following these rules:
+    1. Use markdown formatting
+    2. Format author names as headers with '**'
+    3. Use bullet points for all biographical information
+    4. Italicize book titles with '*'
+    5. Separate sections with blank lines
+    6. Format financial insights as bullet points
+    7. Keep sentences concise
+    
+    Extract from the following: {data}"""
     
     response = client.chat.completions.create(
         model="gpt-4o-mini",  
@@ -75,7 +101,6 @@ def extract_unstructured_data_with_llm(data):
     )
     
     unstructured_data = response.choices[0].message.content
-    
     return unstructured_data
 
 def extract_and_save_authors_data(structured_data):
