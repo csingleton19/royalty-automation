@@ -15,10 +15,27 @@ client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
 # Use the BASE_DIR from config to construct the path
 pkl_file_path = os.path.join(PICKLE_STORAGE_PATH, 'cleaned_data.pkl')
 
+# def load_cleaned_data():
+#     try:
+#         with open(pkl_file_path, 'rb') as file:
+#             cleaned_data = pickle.load(file)
+#         return cleaned_data
+#     except FileNotFoundError:
+#         print(f"Error: The file {pkl_file_path} does not exist.")
+#         return None
+#     except Exception as e:
+#         print(f"An error occurred while loading the pickle file: {e}")
+#         return None
+
 def load_cleaned_data():
     try:
         with open(pkl_file_path, 'rb') as file:
             cleaned_data = pickle.load(file)
+            
+        # Validate the data
+        if not cleaned_data or not isinstance(cleaned_data, str):
+            raise ValueError("Invalid cleaned data format")
+            
         return cleaned_data
     except FileNotFoundError:
         print(f"Error: The file {pkl_file_path} does not exist.")
@@ -59,24 +76,6 @@ def extract_structured_data_with_llm(data):
         raise ValueError("The LLM response is not in a valid JSON format.")
     
     return structured_data_dict
-
-
-# def extract_unstructured_data_with_llm(data):
-#     """
-#     Uses OpenAI's API to extract unstructured data from the loaded data.
-#     """
-#     prompt = f"You are a royalty automation extraction tool. Ignore the structured data. Extract the unstructured, free-form, important information from the following: {data}"
-    
-#     response = client.chat.completions.create(
-#         model="gpt-4o-mini",  
-#         messages=[
-#             {"role": "user", "content": prompt}
-#         ]
-#     )
-    
-#     unstructured_data = response.choices[0].message.content
-    
-#     return unstructured_data
 
 def extract_unstructured_data_with_llm(data):
     """
@@ -167,24 +166,60 @@ def save_data_as_json(data, file_name, base_dir='storage/json_data'):
         json.dump(data, json_file, indent=4)
     print(f"Data saved to {json_file_path}")
 
+# def extractor():
+#     """
+#     Function that combines all of the logic
+#     """
+#     data = load_cleaned_data()
+#     if data is None:
+#         raise ValueError("Failed to load cleaned data")
+        
+#     structured_data = extract_structured_data_with_llm(data)
+#     unstructured_data = extract_unstructured_data_with_llm(data)
+    
+#     # Save the combined authors' data to CSV
+#     if isinstance(structured_data, dict) and structured_data:
+#         extract_and_save_authors_data(structured_data)
+    
+#     save_data_as_json(unstructured_data, 'output_data')
+    
+#     return structured_data, unstructured_data
+
 def extractor():
     """
     Function that combines all of the logic
     """
-    data = load_cleaned_data()
-    if data is None:
-        raise ValueError("Failed to load cleaned data")
+    try:
+        data = load_cleaned_data()
+        if data is None:
+            raise ValueError("Failed to load cleaned data")
+            
+        try:
+            structured_data = extract_structured_data_with_llm(data)
+        except Exception as e:
+            print(f"Error in structured data extraction: {e}")
+            raise
+            
+        try:
+            unstructured_data = extract_unstructured_data_with_llm(data)
+        except Exception as e:
+            print(f"Error in unstructured data extraction: {e}")
+            raise
         
-    structured_data = extract_structured_data_with_llm(data)
-    unstructured_data = extract_unstructured_data_with_llm(data)
-    
-    # Save the combined authors' data to CSV
-    if isinstance(structured_data, dict) and structured_data:
-        extract_and_save_authors_data(structured_data)
-    
-    save_data_as_json(unstructured_data, 'output_data')
-    
-    return structured_data, unstructured_data
+        # Save the combined authors' data to CSV
+        if isinstance(structured_data, dict) and structured_data:
+            try:
+                extract_and_save_authors_data(structured_data)
+            except Exception as e:
+                print(f"Error saving authors data: {e}")
+                raise
+        
+        save_data_as_json(unstructured_data, 'output_data')
+        
+        return structured_data, unstructured_data
+    except Exception as e:
+        print(f"Error in extractor: {e}")
+        raise
 
 
 if __name__ == "__main__":
