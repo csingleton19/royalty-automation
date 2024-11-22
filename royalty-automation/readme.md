@@ -73,3 +73,9 @@ frontend/
 ├── main.py
 ├── requirements.txt
 
+
+
+TODO:
+Fix response structures 
+*vector_db: special characters/newline characters, return only text (not entire output)
+*SQL: results aren't specific enough
