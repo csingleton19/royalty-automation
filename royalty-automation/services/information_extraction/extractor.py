@@ -166,25 +166,6 @@ def save_data_as_json(data, file_name, base_dir='storage/json_data'):
         json.dump(data, json_file, indent=4)
     print(f"Data saved to {json_file_path}")
 
-# def extractor():
-#     """
-#     Function that combines all of the logic
-#     """
-#     data = load_cleaned_data()
-#     if data is None:
-#         raise ValueError("Failed to load cleaned data")
-        
-#     structured_data = extract_structured_data_with_llm(data)
-#     unstructured_data = extract_unstructured_data_with_llm(data)
-    
-#     # Save the combined authors' data to CSV
-#     if isinstance(structured_data, dict) and structured_data:
-#         extract_and_save_authors_data(structured_data)
-    
-#     save_data_as_json(unstructured_data, 'output_data')
-    
-#     return structured_data, unstructured_data
-
 def extractor():
     """
     Function that combines all of the logic
