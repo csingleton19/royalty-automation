@@ -76,6 +76,11 @@ frontend/
 
 
 TODO:
-Fix response structures 
-*vector_db: special characters/newline characters, return only text (not entire output)
-*SQL: results aren't specific enough
+1. Fix response structures 
+*vector_db: remove special characters/newline characters, return only text (not entire pinecone output)
+*SQL: results aren't specific enough i.e. Alice Johnson Q1 query returns all author Q1 and 2 Q2 results 
+2. Hardcoding certain filepaths
+3. Certain naming conventions could be better
+4. Maybe a little more modularity (i.e. extractor)
+5. Embedding process in that it should allow for larger document sizes (chunking + cross chunk context preservation via a sentence or two overlapping)
+6. Filler because there are a few more things I'm not happy with but can't remember right now
