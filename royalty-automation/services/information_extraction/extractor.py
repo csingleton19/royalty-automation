@@ -15,18 +15,6 @@ client = OpenAI(api_key=os.environ.get("OPENAI_KEY"))
 # Use the BASE_DIR from config to construct the path
 pkl_file_path = os.path.join(PICKLE_STORAGE_PATH, 'cleaned_data.pkl')
 
-# def load_cleaned_data():
-#     try:
-#         with open(pkl_file_path, 'rb') as file:
-#             cleaned_data = pickle.load(file)
-#         return cleaned_data
-#     except FileNotFoundError:
-#         print(f"Error: The file {pkl_file_path} does not exist.")
-#         return None
-#     except Exception as e:
-#         print(f"An error occurred while loading the pickle file: {e}")
-#         return None
-
 def load_cleaned_data():
     try:
         with open(pkl_file_path, 'rb') as file:
