@@ -19,6 +19,7 @@ index_name = "royalties"
 class QueryEngine:
     def __init__(self):
         self.vector_db = index
+        self.sql_db_path = DB_PATH
         if self.vector_db is None:
             raise ValueError("Vector database index not properly initialized")
         print(f"Vector database index type: {type(self.vector_db)}")
