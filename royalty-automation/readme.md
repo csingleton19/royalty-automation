@@ -87,4 +87,4 @@ TODO:
 4. Maybe a little more modularity (i.e. extractor)
 5. Embedding process in that it should allow for larger document sizes (chunking + cross chunk context preservation via a sentence or two overlapping)
 6. Definitely need to work on how SQL tables are created and handled - this and #1 are most important I think (also ties into 3 a little bit, slightly redundant)
-7. Filler because there are a few more things I'm not happy with but can't remember right now
+7. Fix the headers so they also get uploaded to SQL
