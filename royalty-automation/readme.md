@@ -81,6 +81,7 @@ TODO:
 *vector_db: remove special characters/newline characters, return only text (not entire pinecone output)
 
 *SQL: results aren't specific enough i.e. Alice Johnson Q1 query returns all author Q1 and 2 Q2 results 
+
 2. Hardcoding certain filepaths
 3. Certain naming conventions could be better
 4. Maybe a little more modularity (i.e. extractor)
