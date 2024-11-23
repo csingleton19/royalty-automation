@@ -4,6 +4,7 @@ from services.data_extraction.data_cleaner import data_cleaner
 from services.information_extraction.extractor import extractor
 from config.config import PDF_STORAGE_PATH
 import os
+import json
 
 # Create a Blueprint instance
 extraction_api_blueprint = Blueprint("extraction_api", __name__)
@@ -29,8 +30,13 @@ def process_pdf():
             return jsonify({"error": "Failed to clean the text data"}), 500
         
         # Step 4: Extract structured and unstructured data
+        # try:
+        #     structured_data, unstructured_data = extractor()
+        # except Exception as e:
+        #     return jsonify({"error": f"Data extraction failed: {str(e)}"}), 500
         try:
             structured_data, unstructured_data = extractor()
+            print("API Route - Structured Data:", json.dumps(structured_data, indent=2)) 
         except Exception as e:
             return jsonify({"error": f"Data extraction failed: {str(e)}"}), 500
         

@@ -32,16 +32,13 @@ def load_cleaned_data():
         print(f"An error occurred while loading the pickle file: {e}")
         return None
 
-
 def extract_structured_data_with_llm(data):
-    """
-    Uses OpenAI's API to extract structured data, format it as a dictionary,
-    and then parse it into a nested Python dictionary.
-    """
     prompt = f"""You are a royalty automation extraction tool. Ignore any unstructured data 
     and extract and format only the structured data as a nested dictionary from the following: 
     {data}
     Ensure the output is in a valid JSON format, only include the nested dictionary. Name the nested dictionary 'royalties'
+    and ensure each quarter contains an 'Authors' key (uppercase) with an array of author data.
+    Each author entry must use 'Name' (not 'Author') as the key for the author's name.
     """
     
     response = client.chat.completions.create(
@@ -52,18 +49,13 @@ def extract_structured_data_with_llm(data):
         response_format={ "type": "json_object" }
     )
     
-    # Extract the response content (string format) from the LLM
     structured_data_str = response.choices[0].message.content
-
-    # return structured_data_str
     
     try:
-        # Parse the string into a nested dictionary using json.loads
         structured_data_dict = json.loads(structured_data_str)
+        return structured_data_dict
     except json.JSONDecodeError:
         raise ValueError("The LLM response is not in a valid JSON format.")
-    
-    return structured_data_dict
 
 def extract_unstructured_data_with_llm(data):
     """
@@ -91,50 +83,50 @@ def extract_unstructured_data_with_llm(data):
     return unstructured_data
 
 def extract_and_save_authors_data(structured_data):
-    # Ensure "RoyaltyStatements" exists in the structured data
     if "royalties" not in structured_data:
         print("No 'royalties' data found.")
         return
     
-    # Access the quarterly data within "royalties"
     quarterly_data = structured_data["royalties"]
     all_authors_dfs = []
     
-    # Iterate over each quarter
     for quarter, details in quarterly_data.items():
-        # Check if "Authors" is in the details for the quarter
         if "Authors" not in details:
             print(f"No 'Authors' data found for {quarter}")
             continue
         
-        # Process authors' data for the current quarter
         authors_data = []
         for author_info in details["Authors"]:
-            # Assume author_info is a dictionary with all author metrics
+            # Normalize the author data
             author_data = {"Quarter": quarter}
-            author_data.update(author_info)  # Include all author info
+            # Handle both "Name" and "Author" keys
+            if "Name" in author_info:
+                author_data["Name"] = author_info["Name"]
+            elif "Author" in author_info:
+                author_data["Name"] = author_info["Author"]
+            else:
+                print(f"No author name found in entry: {author_info}")
+                continue
+                
+            for key, value in author_info.items():
+                if key not in ["Name", "Author"]:  
+                    author_data[key] = value
+                    
             authors_data.append(author_data)
         
-        # Create a DataFrame for the current quarter's authors
-        authors_df = pd.DataFrame(authors_data)
-        all_authors_dfs.append(authors_df)
+        if authors_data:
+            authors_df = pd.DataFrame(authors_data)
+            all_authors_dfs.append(authors_df)
     
-    # Concatenate all author data across quarters
     if all_authors_dfs:
         combined_df = pd.concat(all_authors_dfs, ignore_index=True)
-        
-        # Define the directory and filename for the CSV using BASE_DIR directly
         csv_dir = os.path.join(BASE_DIR, 'storage/csv')
         os.makedirs(csv_dir, exist_ok=True)
         csv_file_path = os.path.join(csv_dir, 'combined_data.csv')
-        
-        # Save the DataFrame to a CSV file
         combined_df.to_csv(csv_file_path, index=False)
         print(f"Combined authors' data saved to {csv_file_path}")
     else:
         print("No author data found across all quarters.")
-
-
 
 def save_data_as_json(data, file_name, base_dir='storage/json_data'):
     """
