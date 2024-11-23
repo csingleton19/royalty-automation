@@ -8,8 +8,9 @@ export const Navigation: React.FC = () => {
       <ul>
         <li><Link to="/upload">PDF Upload</Link></li>
         <li><Link to="/database">Database Management</Link></li>
-        <li><Link to="/query">Query Interface</Link></li>
         <li><Link to="/vector-db">Vector DB Management</Link></li>
+        <li><Link to="/query">Query Interface</Link></li>
+
       </ul>
     </nav>
   );

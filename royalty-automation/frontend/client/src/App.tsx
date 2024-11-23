@@ -6,6 +6,7 @@ import { DatabaseManager } from './components/DatabaseManager';
 import { QueryInterface } from './components/QueryInterface';
 import { VectorDBManager } from './components/VectorDBManager';
 import { Navigation } from './components/Navigation';
+import './App.css';
 
 function App() {
   return (
