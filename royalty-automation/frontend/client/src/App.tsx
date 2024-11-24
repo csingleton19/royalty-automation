@@ -6,6 +6,7 @@ import { DatabaseManager } from './components/DatabaseManager';
 import { QueryInterface } from './components/QueryInterface';
 import { VectorDBManager } from './components/VectorDBManager';
 import { Navigation } from './components/Navigation';
+import { Instructions } from './components/Instructions';
 import './App.css';
 
 function App() {
@@ -13,13 +14,11 @@ function App() {
     <BrowserRouter>
       <Navigation />
       <Routes>
-        {/* Redirect root to upload page */}
-        <Route path="/" element={<Navigate to="/upload" />} />
+        {/* Changed redirect to instructions */}
+        <Route path="/" element={<Navigate to="/instructions" />} />
         
-        {/* Existing route */}
+        <Route path="/instructions" element={<Instructions />} />
         <Route path="/upload" element={<PdfUploader />} />
-        
-        {/* New routes */}
         <Route path="/database" element={<DatabaseManager />} />
         <Route path="/query" element={<QueryInterface />} />
         <Route path="/vector-db" element={<VectorDBManager />} />
