@@ -1,4 +1,4 @@
-\`\`\`
+\`\`\`plaintext
 |royalty-automation/
 │
 |
