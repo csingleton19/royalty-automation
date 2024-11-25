@@ -1,3 +1,4 @@
+\`\`\`
 |royalty-automation/
 │
 |
@@ -72,7 +73,7 @@ frontend/
 ├── utils.py
 ├── main.py
 ├── requirements.txt
-
+\`\`\`
 
 
 TODO:
