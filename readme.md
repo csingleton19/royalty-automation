@@ -1,3 +1,16 @@
+# Index:
+
+1. Structure
+2. Introduction
+3. Setup
+4. Discussion
+5. Limitations
+6. Future Work
+
+
+# Structure
+
+
 ```plaintext
 royalty-automation/
 ├── api_routes/
@@ -63,8 +76,10 @@ royalty-automation/
 │   └── sql/
 ├── utils.py
 ├── main.py
-├── requirements.txt
-'''
+├── requirements.txt'''
+
+
+# Setup 
 
 
 TODO:
