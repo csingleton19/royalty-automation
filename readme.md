@@ -1,11 +1,37 @@
 # Index:
 
-1. Structure
-2. Introduction
-3. Setup
-4. Discussion
-5. Limitations
-6. Future Work
+1. Introduction
+2. Setup
+3. Discussion
+4. Limitations
+5. Future Work
+6. Structure
+
+# Introduction:
+
+This project started over a year ago when someone reached out to me about an idea they had for royalty automation as apparently royalties for authors are calculated manually, therefore automating it could free up a lot of time for those agents. I built a rough MVP using Python, LangChain, OpenAI, and Pinecone - however the other person had to step away. Between that, major framework updates, and someone pointing out a few improvements I could make, I decided to just rewrite the entire thing while keeping in mind the things I like from the previous iteration. A lot of the changes came from OpenAI i.e. I used to use openai.ChatCompletions.create - but that was deprecated in the v.0 versions, and I wanted to use the latest versions. 
+
+# Setup:
+
+# Discussion:
+
+# Limitations
+
+# Future Work
+
+TODO:
+1. Fix response structures 
+
+*vector_db: remove special characters/newline characters, return only text (not entire pinecone output)
+
+*SQL: results aren't specific enough i.e. Alice Johnson Q1 query returns all author Q1 and 2 Q2 results 
+
+2. Hardcoding certain filepaths
+3. Certain naming conventions could be better
+4. Maybe a little more modularity (i.e. extractor)
+5. Embedding process in that it should allow for larger document sizes (chunking + cross chunk context preservation via a sentence or two overlapping)
+6. Definitely need to work on how SQL tables are created and handled - this and #1 are most important I think (also ties into 3 a little bit, slightly redundant)
+7. Fix the headers so they also get uploaded to SQL
 
 
 # Structure
@@ -81,17 +107,3 @@ royalty-automation/
 
 # Setup 
 
-
-TODO:
-1. Fix response structures 
-
-*vector_db: remove special characters/newline characters, return only text (not entire pinecone output)
-
-*SQL: results aren't specific enough i.e. Alice Johnson Q1 query returns all author Q1 and 2 Q2 results 
-
-2. Hardcoding certain filepaths
-3. Certain naming conventions could be better
-4. Maybe a little more modularity (i.e. extractor)
-5. Embedding process in that it should allow for larger document sizes (chunking + cross chunk context preservation via a sentence or two overlapping)
-6. Definitely need to work on how SQL tables are created and handled - this and #1 are most important I think (also ties into 3 a little bit, slightly redundant)
-7. Fix the headers so they also get uploaded to SQL
