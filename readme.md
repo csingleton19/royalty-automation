@@ -123,6 +123,3 @@ royalty-automation/
 ├── main.py
 ├── requirements.txt'''
 
-
-# Setup 
-
